@@ -6,6 +6,7 @@
 
 - `main.py`: 主執行腳本，負責協調整個實驗流程，包括數據加載、模型訓練、超參數搜索和評估。
 - `utils.py`: 工具模組，提供加載所有數據集的統一接口。
+- `visualize.py`： 負責資料集的資料分佈視覺化（PCA、LDA）。
 - `classifiers.py`: 分類器模組，封裝了所有分類器，並內建了數據標準化 Pipeline。
 - `evaluation.py`: 評估模組，提供繪製混淆矩陣、ROC 曲線和性能比較長條圖的功能。
 - `requirements.txt`: 專案的 Python 依賴包列表。
@@ -23,9 +24,9 @@
 
 2.  **準備數據:**
     - `Breast Cancer Wisconsin` 數據集會自動從網路下載
-    - `Banknote Authentication` 需手動下載：[UCI連結](https://archive.ics.uci.edu/dataset/267/banknote+authentication)
+    - `Banknote Authentication` 需手動下載（放在data資料夾）：[UCI連結](https://archive.ics.uci.edu/dataset/267/banknote+authentication)
     - `Digits Dataset` 數據集會自動從網路下載
-    - `Dry Bean Dataset` 需手動下載：[UCI連結](https://archive.ics.uci.edu/dataset/602/dry+bean+dataset)
+    - `Dry Bean Dataset` 需手動下載（放在data資料夾）：[UCI連結](https://archive.ics.uci.edu/dataset/602/dry+bean+dataset)
 
 
 3.  **執行實驗:**
@@ -108,65 +109,61 @@
 ![Breast Cancer AUC 比較](plots/AUC_BAR_breast_cancer.png)
 ![Breast Cancer ROC 曲線](plots/ROC_breast_cancer.png)
 
-**分析:** 線性 SVM 的勝出強烈暗示此數據集的特徵在經過標準化後，具有高度的線性可分性。KNN 和 Random Forest 也表現不俗，但 SVM 尋找最大間隔超平面的能力使其在此任務上略勝一籌。
+**分析:** 線性SVM的勝出強烈暗示此數據集的特徵在經過標準化後，具有高度的線性可分性。KNN 和Random Forest也表現不俗，但SVM尋找最大間隔超平面的能力使其在此任務上略勝一籌
 
 ### 3.2 Banknote Authentication 數據集 (二元分類)
 
-這是一個相對簡單的數據集，KNN和SVM均達到了100%的準確率  
+這是一個相對簡單的數據集，在SVM下曾在最佳超參數的配置下達到100%的準確率
 
 ![Banknote 準確率比較](plots/ACC_BAR_banknote.png)
 ![Banknote AUC 比較](plots/AUC_BAR_banknote.png)
 ![Banknote ROC 曲線](plots/ROC_banknote.png)
 
-**分析:** 數據的清晰可分性使得所有模型都表現優異。KNN 在此類低維度、結構清晰的問題上非常高效。SVM 同樣找到了完美的分類邊界。
+**分析:** 此數據集的清晰可分性使得所有模型都表現優異。KNN在此類低維度、結構清晰的問題上非常高效。SVM同樣找到了完美的分類邊界。
 
 ### 3.3 Digits 數據集 (多類別分類)
-
-在手寫數字辨識這個多類別任務中，SVM 再次以微弱優勢領先，取得了最高的平均準確率和 AUC 分數。
+在手寫數字辨識這個多類別任務中，SVM再次取得了最高的平均準確率和AUC分數
 
 ![Digits 準確率比較](plots/ACC_BAR_digits.png)
 ![Digits AUC 比較](plots/AUC_BAR_digits.png)
 
-**分析:** 所有三個分類器都表現出了強大的多類別分類能力，準確率均超過 96%。SVM 透過其核函數技巧，在處理 64 維像素特徵時展現了其優越性。值得注意的是，僅有 50 棵樹的 Random Forest 表現也極具競爭力，顯示了集成方法的效率。
+**分析:** 所有三個分類器都表現出了強大的多類別分類能力，準確率均超過 97%。SVM透過其核函數技巧，在處理64維像素特徵時展現了其優越性。值得注意的是，200棵樹的Random Forest表現也極具競爭力，顯示了集成方法的效率
 
 ### 3.4 Dry Bean 數據集 (多類別分類)
 
-所有模型的性能都非常接近，SVM 最終以微弱的優勢在所有指標上勝出。
+所有模型的性能都非常接近，SVM最終以微弱的優勢在ACC指標上勝出
 
 ![Dry Bean 準確率比較](plots/ACC_BAR_dry_bean.png)
 ![Dry Bean AUC 比較](plots/AUC_BAR_dry_bean.png)
 
-**分析:** 在這個樣本量大、類別多的複雜問題上，模型之間的差距被縮小。SVM (`C=10`, `kernel='rbf'`) 表現最好，說明一個經過良好調整的非線性 SVM 在處理複雜、高維且有大量數據的問題時是強大的工具。所有模型的F1分數均在 0.93-0.94 之間，表明它們在所有7個類別上都有相當均衡的表現。
+**分析:**  
+  在這個樣本量大、類別多的複雜問題上，模型之間的差距被縮小。SVM (C=10, kernel='rbf') 表現最好，說明一個經過良好調整的非線性 SVM 在處理複雜、高維且有大量數據的問題時是強大的工具。所有模型的Accuracy分數均在 0.92-0.94之間，表明它們在所有7個類別上都有相當均衡的表現  
+	另外，值得關注的是，這三種分類器的原理並不相同，但它們在這份資料集上的混淆矩陣分佈卻非常相似  
+  在混淆矩陣裡，可以看到幾個固定的混淆現象：  
+  * DERMASON ↔ SIRA
+    這兩種豆的物理形狀特徵最接近，模型常混淆，不管是距離（KNN）、樹分裂（RF）或超平面（SVM），都難以區分
+  * BARBUNYA ↔ CALI：
+    也是形狀或顏色類似的類別，屬於次要混淆對
+  * BOMBAY：
+  幾乎完美分類，表示這個類別的特徵分佈非常獨立、清晰  
+  再考慮到此資料集的特徵多為形狀、大小、顏色、紋理等連續值特徵，加上部分類別之間（例如 DERMASON vs SIRA）本身在物理外觀上就有部分重疊，可以推論不論使用哪種模型，只要它能捕捉到主要特徵結構，分類邊界可能就會很接近
+  因此模型雖然不同，但它們學到的決策邊界其實都在相同的資料分佈結構上，錯誤樣本也會重疊
+
 
 ---
 
 ## 4. 綜合結論
 經過搭建並執行了完整的分類器比較流程。所有實驗的詳細數值結果總結如下：
-
-| dataset       | classifier    | best_params                              |   mean_accuracy |   mean_precision |   mean_recall |   mean_f1_score |      auc |
-|:--------------|:--------------|:-----------------------------------------|----------------:|-----------------:|--------------:|----------------:|---------:|
-| breast_cancer | KNN           | {'knn__n_neighbors': 7}                  |        0.971429 |         0.972631 |      0.966512 |        0.969193 | 0.988426 |
-| breast_cancer | Random Forest | {'rf__n_estimators': 200}                |        0.958242 |         0.955545 |      0.955986 |        0.955356 | 0.993221 |
-| breast_cancer | SVM           | {'svm__C': 0.1, 'svm__kernel': 'linear'} |        0.978022 |         0.980659 |      0.972962 |        0.976215 | 0.993717 |
-| banknote      | KNN           | {'knn__n_neighbors': 3}                  |        0.998178 |         0.997969 |      0.998361 |        0.998157 | 1        |
-| banknote      | Random Forest | {'rf__n_estimators': 100}                |        0.994529 |         0.994112 |      0.994974 |        0.994468 | 1        |
-| banknote      | SVM           | {'svm__C': 10, 'svm__kernel': 'rbf'}     |        1        |         1        |      1        |        1        | 1        |
-| digits        | KNN           | {'knn__n_neighbors': 5}                  |        0.97493  |         0.975774 |      0.974852 |        0.974785 | 0.995028 |
-| digits        | Random Forest | {'rf__n_estimators': 50}                 |        0.976326 |         0.976895 |      0.976226 |        0.976044 | 0.99866  |
-| digits        | SVM           | {'svm__C': 1, 'svm__kernel': 'rbf'}      |        0.983297 |         0.983805 |      0.983221 |        0.983219 | 0.999454 |
-| dry_bean      | KNN           | {'knn__n_neighbors': 7}                  |        0.923861 |         0.937511 |      0.934165 |        0.9356   | 0.985772 |
-| dry_bean      | Random Forest | {'rf__n_estimators': 200}                |        0.925331 |         0.937882 |      0.934889 |        0.936256 | 0.993243 |
-| dry_bean      | SVM           | {'svm__C': 10, 'svm__kernel': 'rbf'}     |        0.933229 |         0.945989 |      0.942785 |        0.944291 | 0.99459  |
-
+![results_summary](results_summary.png)
 **總體觀察:**
 
 - **SVM 是表現最好的分類器:** 
   在所有四個任務中，經過超參數優化的SVM均取得了最佳或並列最佳的性能  
   這證明了它作為一個強大且靈活的baseline model的價值
+  
 - **沒有萬能模型:**
   雖然SVM表現最好，但其他模型在特定場景下也極具競爭力  
   例如，KNN在簡單問題上高效且準確；Random Forest則提供了無需過多調參就能獲得的穩定、良好性能  
 
 - **超參數優化的重要性:**
-  `breast_cancer`數據集上的結果（`linear` 核勝出）和 `dry_bean` 數據集上的結果（需要更高的 `C` 值）都凸顯了超參數搜索對於發揮模型全部潛力的關鍵作用  
-  
+  這裡可能看不太出來，不過再我使用不同的種子碼（42、133）時，會出現能夠達到最佳表現的的超參數組合出現變化的情況。這凸顯了超參數搜索對於發揮模型全部潛力的關鍵作用
