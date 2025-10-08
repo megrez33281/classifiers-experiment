@@ -8,9 +8,30 @@
 - `utils.py`: 工具模組，提供加載所有數據集的統一接口。
 - `classifiers.py`: 分類器模組，封裝了所有分類器，並內建了數據標準化 Pipeline。
 - `evaluation.py`: 評估模組，提供繪製混淆矩陣、ROC 曲線和性能比較長條圖的功能。
+- `requirements.txt`: 專案的 Python 依賴包列表。
 - `data/`: 存放本地數據集的資料夾。
 - `plots/`: 存放所有生成圖表的資料夾。
 - `Readme.md`: 本說明檔案，記錄專案細節與成果。
+
+## 環境建立與如何運行
+
+1.  **安裝依賴:**
+    本專案的所有 Python 依賴都記錄在 `requirements.txt` 中。請運行以下指令進行安裝：
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **準備數據:**
+    - `Banknote Authentication` 數據集會自動從網路下載。
+    - `Dry Bean Dataset` 需要手動下載。請從 [Kaggle](https://www.kaggle.com/datasets/muratkokludataset/dry-bean-dataset) 下載，並將解壓縮後的 `Dry_Bean_Dataset.xlsx` 檔案放置在 `data/DryBeanDataset/` 路徑下。
+
+3.  **執行實驗:**
+    所有實驗流程都已整合到 `main.py` 中。直接運行此腳本即可：
+    ```bash
+    python main.py
+    ```
+    腳本會自動執行所有數據集的超參數搜索、模型評估、生成所有圖表至 `plots/` 資料夾、匯出 `results_summary.csv`，並更新本 `Readme.md` 的結果表格。
+
 
 ## 實驗設計
 
