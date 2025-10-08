@@ -42,11 +42,11 @@ def load_dataset(name: str):
         return X, y
 
     elif name == 'dry_bean':
-        # 根據建議，我們預期用戶已將解壓縮後的檔案放在 data/DryBeanDataset/ 目錄下
+        # 預期已將解壓縮後的檔案放在data/DryBeanDataset/目錄下
         local_path = 'data/DryBeanDataset/Dry_Bean_Dataset.xlsx'
         if not os.path.exists(local_path):
             print(f"錯誤: 找不到 '{local_path}'。")
-            print("請確認您已手動從Kaggle下載數據集，並將其解壓縮後的 .xlsx 檔案放置在正確的路徑中。")
+            print("請確認您已手動下載數據集，並將其解壓縮後的 .xlsx 檔案放置在正確的路徑中。")
             return None, None
         
         print(f"從本地路徑加載 '{name}' 數據集: {local_path}")

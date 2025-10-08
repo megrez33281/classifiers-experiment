@@ -29,11 +29,14 @@ def main():
         is_binary = len(np.unique(y)) == 2
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
+        # 要爬網格的參數
         param_grids = {
             "KNN": {'knn__n_neighbors': [3, 5, 7]},
             "Random Forest": {'rf__n_estimators': [50, 100, 200]},
             "SVM": {'svm__C': [0.1, 1, 10], 'svm__kernel': ['linear', 'rbf']}
         }
+
+        # 分類器
         classifiers = {
             "KNN": KNeighborsClassifierWrapper(),
             "Random Forest": RandomForestClassifierWrapper(random_state=42),
@@ -107,18 +110,7 @@ def main():
     results_df.to_csv('results_summary.csv', index=False)
     print("結果摘要已儲存至 results_summary.csv")
 
-    # 更新 Readme.md
-    readme_table = results_df.to_markdown(index=False)
-    print("\n" + readme_table)
-    try:
-        with open('Readme.md', 'r', encoding='utf-8') as f:
-            readme_content = f.read()
-        final_readme_content = readme_content.split("## 最終實驗結果")[0] + "## 最終實驗結果\n\n" + readme_table
-        with open('Readme.md', 'w', encoding='utf-8') as f:
-            f.write(final_readme_content)
-        print("\nReadme.md 已更新完畢。\n")
-    except FileNotFoundError:
-        print("\n錯誤: Readme.md 未找到，無法自動更新。\n")
+
 
 if __name__ == "__main__":
     main()

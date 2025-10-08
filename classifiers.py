@@ -6,10 +6,11 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 class BaseClassifierWrapper:
-    """提供一個通用的方法來獲取模型的預測分數。"""
+    """提供一個通用的方法來獲取模型的預測分數"""
     @staticmethod
     def _get_scores(model, X):
-        """優先嘗試 decision_function，其次是 predict_proba。"""
+        """優先嘗試 decision_function，其次是 predict_proba（回傳每個類別的機率）。"""
+        # 先嘗試取得原生的分數，若不行再嘗試獲取每個類別的機率
         decision_values = None
         proba_values = None
         if hasattr(model, 'decision_function'):
