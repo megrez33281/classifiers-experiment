@@ -34,7 +34,7 @@
     ```bash
     python main.py
     ```
-    腳本會自動執行所有數據集的超參數搜索、模型評估、生成所有圖表至 `plots/` 資料夾、匯出 `results_summary.csv`，並更新本 `Readme.md` 的結果表格。
+    腳本會自動執行所有數據集的超參數搜索、模型評估、生成所有圖表至 `plots/` 資料夾、匯出 `results_summary.csv`。
 
 
 ## 1. 專案簡介
